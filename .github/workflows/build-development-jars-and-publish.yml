@@ -91,7 +91,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
           custom_tag: "${{ steps.vars.outputs.version }}"
-          release_branches: develop
+          release_branches: DevSpigot
       - name: Notify Discord
         uses: sarisia/actions-status-discord@v1
         with:

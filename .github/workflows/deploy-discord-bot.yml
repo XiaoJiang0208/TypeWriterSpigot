@@ -2,7 +2,7 @@ name: Deploy Discord Bot
 on:
   push:
     branches:
-      - develop
+      - DevSpigot
     paths:
       - "discord_bot/**"
 

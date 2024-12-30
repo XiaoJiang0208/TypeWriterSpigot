@@ -4,7 +4,7 @@ name: Create and publish a Docker image
 on:
   push:
     branches:
-      - develop
+      - DevSpigot
     paths:
       - .github/workflows/build-runner-image.yml
       - .github/runners/Dockerfile
