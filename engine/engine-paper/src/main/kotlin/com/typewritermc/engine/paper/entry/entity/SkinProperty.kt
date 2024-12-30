@@ -1,6 +1,7 @@
 package com.typewritermc.engine.paper.entry.entity
 
 import com.typewritermc.engine.paper.entry.entries.EntityProperty
+import com.typewritermc.engine.paper.logger // XiaoJiang
 import org.bukkit.OfflinePlayer
 
 data class SkinProperty(
@@ -12,9 +13,11 @@ data class SkinProperty(
 
 val OfflinePlayer.skin: SkinProperty
     get() {
-        val profile = playerProfile
-        if (!profile.hasTextures()) return SkinProperty()
-        val textures = profile.properties.firstOrNull { it.name == "textures" } ?: return SkinProperty()
+        //WDT TODO: Implement this
+        logger.info("WDF TODO")
+        //val profile = playerProfile // XiaoJiang
+        if (this.playerProfile.textures.isEmpty) return SkinProperty() // XiaoJiang
+        //val textures = profile.properties.firstOrNull { it.name == "textures" } ?: return SkinProperty() // XiaoJiang
 
-        return SkinProperty(textures.value, textures.signature ?: "")
+        return SkinProperty(skin.texture, skin.signature ?: "") // XiaoJiang
     }

@@ -1,5 +1,6 @@
 package com.typewritermc.engine.paper.content.components
 
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.content.ComponentContainer
 import com.typewritermc.engine.paper.content.ContentComponent
 import com.typewritermc.engine.paper.extensions.placeholderapi.parsePlaceholders
@@ -24,7 +25,7 @@ class BossBarComponent(
             barBuilder.overlay,
             barBuilder.flags
         ).also {
-            player.showBossBar(it)
+            TypewriterPaperPlugin.adventure().player(player).showBossBar(it) // XiaoJiang
         }
     }
 
@@ -40,7 +41,7 @@ class BossBarComponent(
     }
 
     override suspend fun dispose(player: Player) {
-        bossBar?.let { player.hideBossBar(it) }
+        bossBar?.let { TypewriterPaperPlugin.adventure().player(player).hideBossBar(it) } // XiaoJiang
     }
 }
 

@@ -1,6 +1,6 @@
 package com.typewritermc.basic.entries.audience
 
-import io.papermc.paper.event.player.PlayerPickItemEvent
+import org.bukkit.event.entity.EntityPickupItemEvent // XiaoJiang
 import com.typewritermc.core.books.pages.Colors
 import com.typewritermc.core.extension.annotations.Entry
 import com.typewritermc.core.extension.annotations.Help
@@ -73,7 +73,9 @@ class HoldingItemAudienceFilter(
     }
 
     @EventHandler
-    fun onPickupItem(event: PlayerPickItemEvent) = event.player.refresh()
+    fun onPickupItem(event: EntityPickupItemEvent) { // XiaoJiang
+        if (event.entity is Player) (event.entity as Player).refresh() // XiaoJiang
+    } // XiaoJiang
 
     @EventHandler
     fun onDropItem(event: PlayerDropItemEvent) = event.player.refresh()

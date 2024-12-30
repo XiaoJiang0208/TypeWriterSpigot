@@ -22,6 +22,7 @@ import com.typewritermc.engine.paper.snippets.snippet
 import com.typewritermc.engine.paper.utils.ThreadType.DISPATCHERS_ASYNC
 import com.typewritermc.engine.paper.utils.distanceSqrt
 import com.typewritermc.engine.paper.utils.firstWalkableLocationBelow
+import com.typewritermc.engine.paper.utils.toCenterLocation // XiaoJiang
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -187,7 +188,7 @@ private class PlayerPathStreamDisplay(
         }
 
         val entity = PFEmptyEntity(start.toProperty(), searchRange = roadNetworkMaxDistance.toFloat())
-        val instance = PFInstanceSpace(start.world)
+        val instance = PFInstanceSpace(start.world!!) // XiaoJiang
         val pathfinder = HydrazinePathFinder(entity, instance)
 
         val additionalRadius = pathfinder.subject().width().toDouble()

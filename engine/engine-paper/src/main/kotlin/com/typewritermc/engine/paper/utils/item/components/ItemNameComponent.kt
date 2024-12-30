@@ -6,6 +6,7 @@ import com.typewritermc.core.extension.annotations.Colored
 import com.typewritermc.core.extension.annotations.Placeholder
 import com.typewritermc.engine.paper.extensions.placeholderapi.parsePlaceholders
 import com.typewritermc.engine.paper.utils.asMini
+import com.typewritermc.engine.paper.utils.toStringComponent // XiaoJiang
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -16,8 +17,11 @@ class ItemNameComponent(
     val name: String,
 ) : ItemComponent {
     override fun apply(player: Player?, item: ItemStack) {
-        item.editMeta { meta ->
-            meta.displayName(name.parsePlaceholders(player).asMini())
-        }
+        // XiaoJiang start
+        //item.editMeta { meta ->
+        //    meta.displayName(name.parsePlaceholders(player).asMini())
+        //}
+        item.itemMeta?.setDisplayName(name.parsePlaceholders(player).asMini().toStringComponent())
+        // XiaoJiang end
     }
 }

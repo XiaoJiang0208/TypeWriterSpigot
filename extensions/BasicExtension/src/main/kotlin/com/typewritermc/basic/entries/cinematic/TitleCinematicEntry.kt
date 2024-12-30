@@ -1,10 +1,11 @@
 package com.typewritermc.basic.entries.cinematic
 
-import io.papermc.paper.util.Tick
+import com.typewritermc.engine.paper.utils.Tick // XiaoJiang
 import com.typewritermc.core.books.pages.Colors
 import com.typewritermc.core.extension.annotations.Default
 import com.typewritermc.core.extension.annotations.Entry
 import com.typewritermc.core.extension.annotations.Segments
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJinag
 import com.typewritermc.engine.paper.entry.Criteria
 import com.typewritermc.engine.paper.entry.cinematic.SimpleCinematicAction
 import com.typewritermc.engine.paper.entry.entries.*
@@ -73,7 +74,7 @@ class TitleCinematicAction(
             times
         )
 
-        player.showTitle(title)
+        TypewriterPaperPlugin.adventure().player(player).showTitle(title) // XiaoJiang
     }
 
     override suspend fun stopSegment(segment: TitleSegment) {

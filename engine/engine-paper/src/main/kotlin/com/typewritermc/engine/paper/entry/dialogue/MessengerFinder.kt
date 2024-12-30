@@ -1,12 +1,12 @@
 package com.typewritermc.engine.paper.entry.dialogue
 
-import com.destroystokyo.paper.event.player.PlayerJumpEvent
 import com.github.shynixn.mccoroutine.bukkit.ticks
 import com.typewritermc.core.entries.Ref
 import com.typewritermc.core.utils.Reloadable
 import com.typewritermc.engine.paper.entry.Modifier
 import com.typewritermc.engine.paper.entry.TriggerableEntry
 import com.typewritermc.engine.paper.entry.entries.DialogueEntry
+import com.typewritermc.engine.paper.events.PlayerJumpEvent // XiaoJiang
 import com.typewritermc.engine.paper.interaction.chatHistory
 import com.typewritermc.engine.paper.plugin
 import com.typewritermc.engine.paper.utils.ThreadType.SYNC

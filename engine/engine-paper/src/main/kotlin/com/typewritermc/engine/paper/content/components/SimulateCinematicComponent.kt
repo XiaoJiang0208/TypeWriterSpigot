@@ -4,6 +4,7 @@ import com.typewritermc.core.books.pages.PageType
 import com.typewritermc.core.entries.Page
 import com.typewritermc.core.entries.Query
 import com.typewritermc.core.utils.loopingDistance
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.content.ContentContext
 import com.typewritermc.engine.paper.content.ContentMode
 import com.typewritermc.engine.paper.content.components.ItemInteractionType.*
@@ -15,10 +16,7 @@ import com.typewritermc.engine.paper.interaction.startBlockingActionBar
 import com.typewritermc.engine.paper.interaction.stopBlockingActionBar
 import com.typewritermc.engine.paper.logger
 import com.typewritermc.engine.paper.plugin
-import com.typewritermc.engine.paper.utils.digits
-import com.typewritermc.engine.paper.utils.loreString
-import com.typewritermc.engine.paper.utils.name
-import com.typewritermc.engine.paper.utils.playSound
+import com.typewritermc.engine.paper.utils.*
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -116,7 +114,7 @@ class SimulateCinematicComponent(
         if (event.player.uniqueId != scrollFrames) return
         val delta = loopingDistance(event.previousSlot, event.newSlot, 8)
         partialFrame += delta * 10
-        event.player.playSound("block.note_block.hat", pitch = 1f + (delta * 0.1f), volume = 0.5f)
+        TypewriterPaperPlugin.adventure().player(event.player).playSound("block.note_block.hat", pitch = 1f + (delta * 0.1f), volume = 0.5f) // XiaoJiang
         event.isCancelled = true
     }
 
@@ -136,15 +134,27 @@ class SimulateCinematicComponent(
 
     override fun items(player: Player): Map<Int, IntractableItem> {
         val playbackSpeed = ItemStack(Material.CLOCK).apply {
-            editMeta { meta ->
-                meta.name = "<yellow><bold>Playback Speed"
+            // XiaoJiang start
+            //editMeta { meta ->
+            //    meta.name = "<yellow><bold>Playback Speed"
+            //    meta.loreString = """
+            //        |<line> <green><b>Right Click: </b><white>Increases speed by 1
+            //        |<line> <green>Shift + Right Click: <white>Increases speed by 0.25
+            //        |<line> <red><b>Left Click: </b><white>Decreases speed by 1
+            //        |<line> <red>Shift + Left Click: <white>Decreases speed by 0.25
+            //        |<line> <blue><b><key:key.swapOffhand>: </b><white>Pause/Resume
+            //    """.trimMargin()
+            //}
+            itemMeta?.let { meta ->
+                meta.name = "<yellow><bold>Playback Speed".asMini().toStringComponent()
+                // XiaoJiang end
                 meta.loreString = """
                     |<line> <green><b>Right Click: </b><white>Increases speed by 1
                     |<line> <green>Shift + Right Click: <white>Increases speed by 0.25
                     |<line> <red><b>Left Click: </b><white>Decreases speed by 1
                     |<line> <red>Shift + Left Click: <white>Decreases speed by 0.25
                     |<line> <blue><b><key:key.swapOffhand>: </b><white>Pause/Resume
-                """.trimMargin()
+                    """.trimMargin().asMini().toStringComponent() // XiaoJiang
             }
         } onInteract { (type) ->
             when (type) {
@@ -157,12 +167,25 @@ class SimulateCinematicComponent(
                     return@onInteract
                 }
             }
-            player.playSound("ui.button.click")
+            TypewriterPaperPlugin.adventure().player(player).playSound("ui.button.click") // XiaoJiang
         }
 
         val skip = ItemStack(Material.AMETHYST_SHARD).apply {
-            editMeta { meta ->
-                meta.name = "<yellow><bold>Skip Frame"
+            // XiaoJiang start
+            //editMeta { meta ->
+            //    meta.name = "<yellow><bold>Skip Frame"
+            //    meta.loreString = """
+            //        |<line> <green><b>Right Click: </b><white>Goes forward 20 frames
+            //        |<line> <green>Shift + Right Click: <white>Goes forward 1 frames
+            //        |<line> <red><b>Left Click: </b><white>Goes backwards 20 frames
+            //        |<line> <red>Shift + Left Click: <white>Goes backwards 1 frames
+            //        |<line> <yellow><b><key:key.drop>: </b><white>Rewind to start
+            //        |<line> <blue><b><key:key.swapOffhand>: </b><white>Go into advanced playback control mode
+            //    """.trimMargin()
+            //}
+            itemMeta?.let { meta ->
+                meta.name = "<yellow><bold>Skip Frame".asMini().toStringComponent()
+                // XiaoJiang end
                 meta.loreString = """
                     |<line> <green><b>Right Click: </b><white>Goes forward 20 frames
                     |<line> <green>Shift + Right Click: <white>Goes forward 1 frames
@@ -170,7 +193,7 @@ class SimulateCinematicComponent(
                     |<line> <red>Shift + Left Click: <white>Goes backwards 1 frames
                     |<line> <yellow><b><key:key.drop>: </b><white>Rewind to start
                     |<line> <blue><b><key:key.swapOffhand>: </b><white>Go into advanced playback control mode
-                """.trimMargin()
+                    """.trimMargin().asMini().toStringComponent() // XiaoJiang
             }
         } onInteract { (type) ->
             when (type) {
@@ -181,10 +204,10 @@ class SimulateCinematicComponent(
                 DROP -> partialFrame = 0.0
                 SWAP -> {
                     scrollFrames = if (scrollFrames == null) {
-                        player.playSound("block.amethyst_block.hit")
+                        TypewriterPaperPlugin.adventure().player(player).playSound("block.amethyst_block.hit") // XiaoJiang
                         player.uniqueId
                     } else {
-                        player.playSound("block.amethyst_block.fall")
+                        TypewriterPaperPlugin.adventure().player(player).playSound("block.amethyst_block.fall") // XiaoJiang
                         null
                     }
                 }
@@ -193,7 +216,7 @@ class SimulateCinematicComponent(
                     return@onInteract
                 }
             }
-            player.playSound("ui.button.click")
+            TypewriterPaperPlugin.adventure().player(player).playSound("ui.button.click") // XiaoJiang
         }
 
         return mapOf(

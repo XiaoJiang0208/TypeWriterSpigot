@@ -2,6 +2,7 @@ package com.typewritermc.engine.paper.content
 
 import com.typewritermc.core.utils.failure
 import com.typewritermc.core.utils.ok
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.content.components.IntractableItem
 import com.typewritermc.engine.paper.content.components.ItemInteraction
 import com.typewritermc.engine.paper.content.components.ItemInteractionType
@@ -13,10 +14,12 @@ import com.typewritermc.engine.paper.interaction.InteractionHandler
 import com.typewritermc.engine.paper.logger
 import com.typewritermc.engine.paper.plugin
 import com.typewritermc.engine.paper.utils.ThreadType.SYNC
+import com.typewritermc.engine.paper.utils.callEvent // XiaoJiang
 import com.typewritermc.engine.paper.utils.msg
 import com.typewritermc.engine.paper.utils.playSound
 import lirand.api.extensions.events.unregister
 import lirand.api.extensions.server.registerEvents
+import org.bukkit.Material // XiaoJiang
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -42,7 +45,7 @@ class ContentEditor(
         get() = stack.peek()
 
     suspend fun initialize(): Result<Unit> {
-        player.playSound("block.beacon.activate")
+        TypewriterPaperPlugin.adventure().player(player).playSound("block.beacon.activate") // XiaoJiang
         SYNC.switchContext {
             ContentEditorStartEvent(player).callEvent()
         }
@@ -75,7 +78,7 @@ class ContentEditor(
         val removedSlots = previousSlots - currentSlots
         SYNC.switchContext {
             newSlots.forEach { slot ->
-                val originalItem = player.inventory.getItem(slot) ?: ItemStack.empty()
+                val originalItem = player.inventory.getItem(slot) ?: ItemStack(Material.AIR) // XiaoJiang
                 cachedOriginalItems.putIfAbsent(slot, originalItem)
             }
             items.forEach { (slot, item) ->
@@ -89,7 +92,7 @@ class ContentEditor(
     }
 
     suspend fun pushMode(newMode: ContentMode): Result<Unit> {
-        player.playSound("ui.loom.take_result")
+        TypewriterPaperPlugin.adventure().player(player).playSound("ui.loom.take_result") // XiaoJiang
         val previous = mode
         val result = newMode.setup()
         stack.push(newMode)
@@ -104,7 +107,7 @@ class ContentEditor(
     }
 
     suspend fun swapMode(newMode: ContentMode): Result<Unit> {
-        player.playSound("ui.loom.take_result")
+        TypewriterPaperPlugin.adventure().player(player).playSound("ui.loom.take_result") // XiaoJiang
         val previous = stack.pop()
         val result = newMode.setup()
         stack.push(newMode)
@@ -119,7 +122,7 @@ class ContentEditor(
     }
 
     suspend fun popMode(): Boolean {
-        player.playSound("ui.cartography_table.take_result")
+        TypewriterPaperPlugin.adventure().player(player).playSound("ui.cartography_table.take_result") // XiaoJiang
         stack.pop()?.dispose()
         mode?.initialize()
         return mode != null
@@ -135,7 +138,7 @@ class ContentEditor(
         stack.clear()
         cache.forEach { it.dispose() }
         SYNC.switchContext {
-            player.playSound("block.beacon.deactivate")
+            TypewriterPaperPlugin.adventure().player(player).playSound("block.beacon.deactivate") // XiaoJiang
             ContentEditorEndEvent(player).callEvent()
         }
     }

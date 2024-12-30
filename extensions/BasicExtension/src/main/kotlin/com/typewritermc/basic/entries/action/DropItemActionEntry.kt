@@ -46,9 +46,9 @@ class DropItemActionEntry(
             if (location.isPresent) {
                 val position = location.get()
                 val bukkitLocation = position.get(player).toBukkitLocation()
-                bukkitLocation.world.dropItem(bukkitLocation, item.get(player).build(player))
+                bukkitLocation.world?.dropItem(bukkitLocation, item.get(player).build(player)) // XiaoJiang
             } else {
-                player.location.world.dropItem(player.location, item.get(player).build(player))
+                player.location.world?.dropItem(player.location, item.get(player).build(player)) // XiaoJiang
             }
         }
     }

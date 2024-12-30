@@ -4,7 +4,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import org.bukkit.event.player.PlayerEvent
 
-class AsyncCinematicTickEvent(player: Player, val frame: Int) : PlayerEvent(player, true) {
+class AsyncCinematicTickEvent(player: Player, val frame: Int) : AsyncPlayerEvent(player, true) { // XiaoJiang
     override fun getHandlers(): HandlerList = HANDLER_LIST
 
     companion object {

@@ -1,6 +1,6 @@
 package com.typewritermc.engine.paper.utils
 
-import com.destroystokyo.paper.profile.PlayerProfile
+import org.bukkit.profile.PlayerProfile // XiaoJiang
 import com.github.retrooper.packetevents.protocol.particle.Particle
 import com.github.retrooper.packetevents.protocol.particle.data.ParticleDustData
 import com.github.retrooper.packetevents.protocol.particle.type.ParticleTypes
@@ -155,14 +155,14 @@ val <T : Any> Optional<T>?.optional: Optional<T> get() = Optional.ofNullable(thi
 val <T : Any> T?.optional: Optional<T> get() = Optional.ofNullable(this)
 
 var ItemMeta.loreString: String?
-    get() = lore()?.joinToString("\n") { it.asMini() }
+    get() = lore?.joinToString("\n") { it.asMini().toStringComponent() } // XiaoJiang
     set(value) {
-        lore(value?.split("\n")?.map { "<!i><white>$it".asMini() })
+        lore = value?.split("\n")?.map { "<!i><white>$it".asMini().toStringComponent() } // XiaoJiang
     }
 
 var ItemMeta.name: String?
-    get() = if (hasDisplayName()) displayName()?.asMini() else null
-    set(value) = displayName(if (!value.isNullOrEmpty()) "<!i>$value".asMini() else Component.text(" "))
+    get() = if (hasDisplayName()) displayName.asMini().toStringComponent() else null // XiaoJiang
+    set(value) = setDisplayName(if (!value.isNullOrEmpty()) "<!i>$value".asMini().toStringComponent() else Component.text(" ").toStringComponent()) // XiaoJiang
 
 fun ItemMeta.unClickable(): ItemMeta {
     addEnchant(Enchantment.BINDING_CURSE, 1, true)
@@ -174,7 +174,7 @@ private val RANDOM_UUID =
     UUID.fromString("92864445-51c5-4c3b-9039-517c9927d1b4") // We reuse the same "random" UUID all the time
 
 private fun getProfile(url: String): PlayerProfile {
-    val profile: PlayerProfile = server.createProfile(RANDOM_UUID) // Get a new player profile
+    val profile: PlayerProfile = server.createPlayerProfile(RANDOM_UUID) // Get a new player profile // XiaoJiang
     val textures: PlayerTextures = profile.textures
     textures.skin = try {
         // The URL to the skin, for example: https://textures.minecraft.net/texture/18813764b2abc94ec3c3bc67b9147c21be850cdf996679703157f4555997ea63a
@@ -187,5 +187,6 @@ private fun getProfile(url: String): PlayerProfile {
 }
 
 fun SkullMeta.applySkinUrl(url: String) {
-    playerProfile = getProfile(url)
+    logger.warning("WTF TODO Extensions") // XiaoJiang
+    //playerProfile = getProfile(url) // XiaoJiang
 }

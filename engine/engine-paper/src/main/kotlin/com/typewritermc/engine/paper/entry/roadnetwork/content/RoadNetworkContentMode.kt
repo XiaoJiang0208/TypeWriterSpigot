@@ -8,6 +8,7 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPa
 import com.typewritermc.core.entries.Ref
 import com.typewritermc.core.utils.failure
 import com.typewritermc.core.utils.ok
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.content.ContentComponent
 import com.typewritermc.engine.paper.content.ContentContext
 import com.typewritermc.engine.paper.content.ContentMode
@@ -190,22 +191,37 @@ private class NetworkAddNodeComponent(
 ) : ContentComponent, ItemsComponent {
     override fun items(player: Player): Map<Int, IntractableItem> {
         val addNodeItem = ItemStack(Material.DIAMOND).apply {
-            editMeta { meta ->
-                meta.name = "<green><b>Add Node"
-                meta.loreString = "<line> <gray>Click to add a new node to the road network"
+            // XiaoJiang start
+            //editMeta { meta ->
+            //    meta.name = "<green><b>Add Node"
+            //    meta.loreString = "<line> <gray>Click to add a new node to the road network"
+            //}
+            itemMeta?.let { meta ->
+                meta.name = "<green><b>Add Node".asMini().toStringComponent()
+                meta.loreString = "<line> <gray>Click to add a new node to the road network".asMini().toStringComponent()
             }
+            // XiaoJiang end
         } onInteract {
             if (it.type.isClick) onAdd(it.clickedBlock?.location?.clone()?.add(0, 1, 0) ?: player.location)
         }
 
         val addNegativeNodeItem = ItemStack(Material.NETHERITE_INGOT).apply {
-            editMeta { meta ->
-                meta.name = "<red><b>Add Negative Node"
+            // XiaoJiang start
+            //editMeta { meta ->
+            //    meta.name = "<red><b>Add Negative Node"
+            //    meta.loreString = """
+            //    |<line> <gray>Click to add a new negative node to the road network
+            //    |<line> <gray>Blocking pathfinding through its radius
+            //    """.trimMargin()
+            //}
+            itemMeta?.let { meta ->
+                meta.name = "<red><b>Add Negative Node".asMini().toStringComponent()
                 meta.loreString = """
-                |<line> <gray>Click to add a new negative node to the road network
-                |<line> <gray>Blocking pathfinding through its radius
-                """.trimMargin()
+                    |<line> <gray>Click to add a new negative node to the road network
+                    |<line> <gray>Blocking pathfinding through its radius
+                    """.trimMargin().asMini().toStringComponent()
             }
+            // XiaoJiang end
         } onInteract {
             if (it.type.isClick) onAddNegative(it.clickedBlock?.location?.clone()?.add(0, 1, 0) ?: player.location)
         }
@@ -226,14 +242,20 @@ private class NetworkHighlightComponent(
 ) : ItemComponent {
     override fun item(player: Player): Pair<Int, IntractableItem> {
         val item = ItemStack(Material.GLOWSTONE_DUST).apply {
-            editMeta { meta ->
-                meta.name = "<yellow><b>Highlight Nodes"
-                meta.loreString = "<line> <gray>Click to highlight all nodes"
+            // XiaoJiang start
+            //editMeta { meta ->
+            //    meta.name = "<yellow><b>Highlight Nodes"
+            //    meta.loreString = "<line> <gray>Click to highlight all nodes"
+            //}
+            itemMeta?.let { meta ->
+                meta.name = "<yellow><b>Highlight Nodes".asMini().toStringComponent()
+                meta.loreString = "<line> <gray>Click to highlight all nodes".asMini().toStringComponent()
             }
+            // XiaoJiang end
         } onInteract {
             if (!it.type.isClick) return@onInteract
             onHighlight()
-            player.playSound("ui.button.click")
+            TypewriterPaperPlugin.adventure().player(player).playSound("ui.button.click") // XiaoJiang
         }
 
         return 0 to item
@@ -245,14 +267,20 @@ private class NetworkRecalculateAllEdgesComponent(
 ) : ItemComponent {
     override fun item(player: Player): Pair<Int, IntractableItem> {
         val item = ItemStack(Material.REDSTONE).apply {
-            editMeta { meta ->
-                meta.name = "<red><b>Recalculate Edges"
-                meta.loreString = "<line> <gray>Click to recalculate all edges, this might take a while."
+            // XiaoJiang start
+            //editMeta { meta ->
+            //    meta.name = "<red><b>Recalculate Edges"
+            //    meta.loreString = "<line> <gray>Click to recalculate all edges, this might take a while."
+            //}
+            itemMeta?.let { meta ->
+                meta.name = "<red><b>Recalculate Edges".asMini().toStringComponent()
+                meta.loreString = "<line> <gray>Click to recalculate all edges, this might take a while.".asMini().toStringComponent()
             }
+            // XiaoJiang end
         } onInteract {
             if (!it.type.isClick) return@onInteract
             onRecalculate()
-            player.playSound("ui.button.click")
+            TypewriterPaperPlugin.adventure().player(player).playSound("ui.button.click") // XiaoJiang
         }
 
         return 1 to item

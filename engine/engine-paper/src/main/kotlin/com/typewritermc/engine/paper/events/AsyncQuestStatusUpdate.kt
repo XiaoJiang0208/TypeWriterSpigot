@@ -13,7 +13,7 @@ class AsyncQuestStatusUpdate(
     val from: QuestStatus,
     val to: QuestStatus,
 ) :
-    PlayerEvent(player, true) {
+    AsyncPlayerEvent(player, true) { // XiaoJiang
     override fun getHandlers(): HandlerList = HANDLER_LIST
 
     companion object {

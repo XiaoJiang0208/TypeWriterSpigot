@@ -6,6 +6,7 @@ import com.typewritermc.core.extension.annotations.Segments
 import com.typewritermc.engine.paper.entry.Criteria
 import com.typewritermc.core.entries.Ref
 import com.typewritermc.core.entries.emptyRef
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.entries.CinematicAction
 import com.typewritermc.engine.paper.entry.entries.CinematicEntry
 import com.typewritermc.engine.paper.entry.entries.PrimaryCinematicEntry
@@ -47,8 +48,8 @@ class SubtitleDialogueCinematicEntry(
             segments,
             subtitlePercentage,
             reset = {
-                sendActionBar(Component.empty())
-                player.clearTitle()
+                TypewriterPaperPlugin.adventure().player(this).sendActionBar(Component.empty()) // XiaoJiang
+                TypewriterPaperPlugin.adventure().player(player).clearTitle() // XiaoJiang
             },
             display = ::displaySubTitle
         )
@@ -72,8 +73,8 @@ class RandomSubtitleDialogueCinematicEntry(
             segments.toDisplaySegments(),
             subtitlePercentage,
             reset = {
-                sendActionBar(Component.empty())
-                player.clearTitle()
+                TypewriterPaperPlugin.adventure().player(this).sendActionBar(Component.empty()) // XiaoJiang
+                TypewriterPaperPlugin.adventure().player(player).clearTitle() // XiaoJiang
             },
             display = ::displaySubTitle
         )
@@ -107,7 +108,7 @@ private fun displaySubTitle(player: Player, speakerName: String, text: String, d
         Placeholder.parsed("speaker", speakerName),
     )
 
-    player.showTitle(Title.title(Component.empty(), component, times))
+    TypewriterPaperPlugin.adventure().player(player).showTitle(Title.title(Component.empty(), component, times)) // XiaoJiang
     player.acceptActionBarMessage(actionBarComponent)
-    player.sendActionBar(actionBarComponent)
+    TypewriterPaperPlugin.adventure().player(player).sendActionBar(actionBarComponent) // XiaoJiang
 }

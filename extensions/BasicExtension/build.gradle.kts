@@ -1,6 +1,7 @@
 repositories { }
 dependencies {
-   implementation("com.mthaler:aparser:0.4.0")
+    implementation("com.mthaler:aparser:0.4.0")
+    compileOnly("net.kyori:adventure-platform-bukkit:4.3.4")
 }
 
 typewriter {

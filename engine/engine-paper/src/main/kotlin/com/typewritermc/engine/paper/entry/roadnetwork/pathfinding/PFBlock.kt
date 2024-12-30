@@ -3,6 +3,7 @@ package com.typewritermc.engine.paper.entry.roadnetwork.pathfinding
 import com.extollit.gaming.ai.path.model.IBlockDescription
 import com.extollit.gaming.ai.path.model.IBlockObject
 import com.extollit.linalg.immutable.AxisAlignedBBox
+import com.typewritermc.engine.paper.utils.getCollisionShape // XiaoJiang
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.data.BlockData

@@ -7,15 +7,14 @@ import com.github.retrooper.packetevents.protocol.particle.type.ParticleTypes
 import com.github.retrooper.packetevents.util.Vector3d
 import com.github.retrooper.packetevents.util.Vector3f
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerParticle
+import com.typewritermc.core.entries.Ref // XiaoJiang
 import com.typewritermc.core.utils.loopingDistance
 import com.typewritermc.core.utils.ok
-import lirand.api.extensions.events.unregister
-import lirand.api.extensions.server.registerEvents
-import com.typewritermc.engine.paper.content.ContentComponent
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
+import com.typewritermc.engine.paper.content.ContentComponent // XiaoJiang
 import com.typewritermc.engine.paper.content.ContentContext
 import com.typewritermc.engine.paper.content.ContentMode
 import com.typewritermc.engine.paper.content.components.*
-import com.typewritermc.core.entries.Ref
 import com.typewritermc.engine.paper.entry.entries.*
 import com.typewritermc.engine.paper.entry.forceTriggerFor
 import com.typewritermc.engine.paper.entry.roadnetwork.RoadNetworkEditorState
@@ -26,6 +25,8 @@ import com.typewritermc.engine.paper.extensions.packetevents.sendPacketTo
 import com.typewritermc.engine.paper.plugin
 import com.typewritermc.engine.paper.utils.*
 import com.typewritermc.engine.paper.utils.ThreadType.DISPATCHERS_ASYNC
+import lirand.api.extensions.events.unregister // XiaoJiang
+import lirand.api.extensions.server.registerEvents // XiaoJiang
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
@@ -166,7 +167,7 @@ class SelectedRoadNodeContentMode(
             return
         }
 
-        if (player.inventory.itemInMainHand.isEmpty) {
+        if (player.inventory.itemInMainHand.type == Material.AIR) { // XiaoJiang
             ContentModeSwapTrigger(
                 context,
                 SelectedRoadNodeContentMode(context, player, ref, node.id, false),
@@ -193,7 +194,7 @@ class SelectedRoadNodeContentMode(
             }
         if (containsOtherModification) return
 
-        player.playSound("ui.button.click")
+        TypewriterPaperPlugin.adventure().player(player).playSound("ui.button.click") // XiaoJiang
 
         val containsModification =
             network.modifications.any { it is M && it.start == selectedNodeId && it.end == node.id }
@@ -266,10 +267,16 @@ class RemoveNodeComponent(
 ) : ItemComponent {
     override fun item(player: Player): Pair<Int, IntractableItem> {
         return slot to (ItemStack(Material.REDSTONE_BLOCK).apply {
-            editMeta { meta ->
-                meta.name = "<red><b>Remove Node"
-                meta.loreString = "<line> <gray>Careful! This action is irreversible."
+            // XiaoJiang start
+            //editMeta { meta ->
+            //    meta.name = "<red><b>Remove Node"
+            //    meta.loreString = "<line> <gray>Careful! This action is irreversible."
+            //}
+            itemMeta?.let { meta ->
+                meta.name = "<red><b>Remove Node".asMini().toStringComponent()
+                meta.loreString = "<line> <gray>Careful! This action is irreversible.".asMini().toStringComponent()
             }
+            // XiaoJiang end
         } onInteract {
             onRemove()
         })
@@ -294,7 +301,7 @@ private class SelectedNodePathsComponent(
         val node = nodeFetcher() ?: return emptyMap()
         val network = networkFetcher()
         val nodes = network.nodes.associateBy { it.id }
-        val instance = PFInstanceSpace(node.location.world)
+        val instance = PFInstanceSpace(node.location.world!!) // XiaoJiang
         return network.edges.filter { it.start == node.id }
             .mapNotNull { edge ->
                 val start = nodes[edge.start] ?: return@mapNotNull null
@@ -360,17 +367,31 @@ class NodeRadiusComponent(
 
     override fun item(player: Player): Pair<Int, IntractableItem> {
         val item = if (scrolling != null) ItemStack(Material.CALIBRATED_SCULK_SENSOR).apply {
-            editMeta { meta ->
-                meta.name = "<yellow><b>Selecting Radius"
-                meta.loreString = "<line> <gray>Right click to set the radius of the node."
+            // XiaoJiang start
+            //editMeta { meta ->
+            //    meta.name = "<yellow><b>Selecting Radius"
+            //    meta.loreString = "<line> <gray>Right click to set the radius of the node."
+            //    meta.unClickable()
+            //}
+            itemMeta?.let { meta ->
+                meta.name = "<yellow><b>Selecting Radius".asMini().toStringComponent()
+                meta.loreString = "<line> <gray>Right click to set the radius of the node.".asMini().toStringComponent()
                 meta.unClickable()
             }
+            // XiaoJiang end
         } else ItemStack(Material.SCULK_SENSOR).apply {
-            editMeta { meta ->
-                meta.name = "<yellow><b>Change Radius"
-                meta.loreString = "<line> <gray>Current radius: <white>${nodeFetcher()?.radius}"
+            // XiaoJiang start
+            //editMeta { meta ->
+            //    meta.name = "<yellow><b>Change Radius"
+            //    meta.loreString = "<line> <gray>Current radius: <white>${nodeFetcher()?.radius}"
+            //    meta.unClickable()
+            //}
+            itemMeta?.let { meta ->
+                meta.name = "<yellow><b>Change Radius".asMini().toStringComponent()
+                meta.loreString = "<line> <gray>Current radius: <white>${nodeFetcher()?.radius}".asMini().toStringComponent()
                 meta.unClickable()
             }
+            // XiaoJiang end
         }
         return slot to (item onInteract {
             scrolling = if (scrolling == player.uniqueId) {
@@ -378,7 +399,7 @@ class NodeRadiusComponent(
             } else {
                 player.uniqueId
             }
-            player.playSound("ui.button.click")
+            TypewriterPaperPlugin.adventure().player(player).playSound("ui.button.click") // XiaoJiang
         })
     }
 
@@ -405,7 +426,7 @@ class NodeRadiusComponent(
         } else {
             "block.note_block.hat"
         }
-        player.playSound(sound, pitch = 1f + (delta * 0.1f), volume = 0.5f)
+        TypewriterPaperPlugin.adventure().player(player).playSound(sound, pitch = 1f + (delta * 0.1f), volume = 0.5f) // XiaoJiang
         event.isCancelled = true
     }
 
@@ -436,31 +457,55 @@ private class ModificationComponent(
         val network = networkFetcher()
 
         map[5] = ItemStack(Material.EMERALD).apply {
-            editMeta { meta ->
-                meta.name = "<green><b>Add Fast Travel Connection"
+            // XiaoJiang start
+            //editMeta { meta ->
+            //    meta.name = "<green><b>Add Fast Travel Connection"
+            //    meta.loreString = """
+            //        |<line> <gray>Click on a unconnected node to <green>add a fast travel connection</green> to it.
+            //        |<line> <gray>Click on a modified node to <red>remove the connection</red>.
+            //        |
+            //        |<line> <gray>If you only want to connect one way, hold <red>Shift</red> while clicking.
+            //        |""".trimMargin()
+            //    meta.unClickable()
+            //}
+            itemMeta?.let { meta ->
+                meta.name = "<green><b>Add Fast Travel Connection".asMini().toStringComponent()
                 meta.loreString = """
                     |<line> <gray>Click on a unconnected node to <green>add a fast travel connection</green> to it.
                     |<line> <gray>Click on a modified node to <red>remove the connection</red>.
                     |
                     |<line> <gray>If you only want to connect one way, hold <red>Shift</red> while clicking.
-                    |""".trimMargin()
+                    |""".trimMargin().asMini().toStringComponent()
                 meta.unClickable()
             }
+            //XiaoJiang
         } onInteract {}
 
         val hasEdges = network.edges.any { it.start == node.id }
         if (hasEdges) {
             map[6] = ItemStack(Material.REDSTONE).apply {
-                editMeta { meta ->
+                // XiaoJiang start
+                //editMeta { meta ->
+                //    meta.name = "<red><b>Remove Edge"
+                //    meta.loreString = """
+                //    |<line> <gray>Click on a connected node to <red>force remove the edge</red> between them.
+                //    |<line> <gray>Click on a modified node to allow the edge to be added again.
+                //    |
+                //    |<line> <gray>If you only want to remove one way, hold <red>Shift</red> while clicking.
+                //""".trimMargin()
+                //    meta.unClickable()
+                //}
+                itemMeta?.let { meta ->
                     meta.name = "<red><b>Remove Edge"
                     meta.loreString = """
-                    |<line> <gray>Click on a connected node to <red>force remove the edge</red> between them.
-                    |<line> <gray>Click on a modified node to allow the edge to be added again.
-                    |
-                    |<line> <gray>If you only want to remove one way, hold <red>Shift</red> while clicking.
-                """.trimMargin()
+                        |<line> <gray>Click on a connected node to <red>force remove the edge</red> between them.
+                        |<line> <gray>Click on a modified node to allow the edge to be added again.
+                        |
+                        |<line> <gray>If you only want to remove one way, hold <red>Shift</red> while clicking.
+                        """.trimMargin().asMini().toStringComponent()
                     meta.unClickable()
                 }
+                // XiaoJiang end
             } onInteract {
             }
         }

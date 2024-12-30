@@ -1,6 +1,6 @@
 package com.typewritermc.basic.entries.event
 
-import io.papermc.paper.event.player.AsyncChatEvent
+import org.bukkit.event.player.AsyncPlayerChatEvent // XiaoJiang
 import com.typewritermc.core.books.pages.Colors
 import com.typewritermc.core.entries.Query
 import com.typewritermc.core.entries.Ref
@@ -12,6 +12,7 @@ import com.typewritermc.core.extension.annotations.Regex
 import com.typewritermc.engine.paper.entry.*
 import com.typewritermc.engine.paper.entry.entries.EventEntry
 import com.typewritermc.engine.paper.utils.plainText
+import net.kyori.adventure.text.Component // XiaoJiang
 import kotlin.text.Regex as KotlinRegex
 
 @Entry(
@@ -40,8 +41,8 @@ class ChatContainsTextEventEntry(
 
 
 @EntryListener(ChatContainsTextEventEntry::class)
-fun onChat(event: AsyncChatEvent, query: Query<ChatContainsTextEventEntry>) {
-    val message = event.message().plainText()
+fun onChat(event: AsyncPlayerChatEvent, query: Query<ChatContainsTextEventEntry>) { // XiaoJiang
+    val message = Component.text(event.message).plainText() // XiaoJiang
     query findWhere {
         if (it.exactSame)
             KotlinRegex(it.text).matches(message)

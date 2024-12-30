@@ -9,6 +9,7 @@ import com.github.retrooper.packetevents.protocol.packettype.PacketType
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSystemChatMessage
 import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.plugin
 import com.typewritermc.engine.paper.snippets.snippet
 import com.typewritermc.engine.paper.utils.asMiniWithResolvers
@@ -168,11 +169,11 @@ class ChatHistory {
                 var msg = Component.text("no-index-resend")
                 if (clear) msg = msg.append(Component.text(clearMessage()))
                 messages.forEach { msg = msg.append(Component.text("\n")).append(it.message) }
-                player.sendMessage(msg)
+                TypewriterPaperPlugin.adventure().player(player).sendMessage(msg) // XiaoJiang
             }
 
             is BlockingStatus.PartialBlocking -> {
-                messages.reversed().take(status.newMessages).forEach { player.sendMessage(it.message) }
+                messages.reversed().take(status.newMessages).forEach { TypewriterPaperPlugin.adventure().player(player).sendMessage(it.message) } // XiaoJiang
             }
         }
         blockingState = BlockingStatus.PartialBlocking(0)

@@ -15,7 +15,7 @@ class PositionContentMode(context: ContentContext, player: Player) :
     override fun value(): Position {
         val location = player.location
         return Position(
-            World(location.world.name),
+            World(location.world!!.name), // XiaoJiang
             location.x.round(2),
             location.y.round(2),
             location.z.round(2),

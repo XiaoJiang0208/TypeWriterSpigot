@@ -14,6 +14,7 @@ import com.typewritermc.engine.paper.entry.entries.ConstVar
 import com.typewritermc.engine.paper.entry.entries.EventEntry
 import com.typewritermc.engine.paper.entry.entries.Var
 import com.typewritermc.engine.paper.utils.toPosition
+import com.typewritermc.engine.paper.utils.hasChangedBlock // XiaoJiang
 import lirand.api.extensions.math.blockLocation
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerMoveEvent
@@ -43,15 +44,15 @@ fun onPlayerNearLocation(event: PlayerMoveEvent, query: Query<PlayerNearLocation
     // Only check if the player moved a block
     if (!event.hasChangedBlock()) return
     val fromPosition = event.from.blockLocation.toPosition()
-    val toPosition = event.to.blockLocation.toPosition()
-    query.findInRange(event.player, fromPosition, toPosition).triggerAllFor(event.player)
+    val toPosition = event.to?.blockLocation?.toPosition() // XiaoJiang
+    query.findInRange(event.player, fromPosition, toPosition!!).triggerAllFor(event.player) // XiaoJiang
 }
 
 @EntryListener(PlayerNearLocationEventEntry::class)
 fun onPlayerTeleportNearLocation(event: PlayerTeleportEvent, query: Query<PlayerNearLocationEventEntry>) {
     val fromPosition = event.from.blockLocation.toPosition()
-    val toPosition = event.to.blockLocation.toPosition()
-    query.findInRange(event.player, fromPosition, toPosition).triggerAllFor(event.player)
+    val toPosition = event.to?.blockLocation?.toPosition() // XiaoJiang
+    query.findInRange(event.player, fromPosition, toPosition!!).triggerAllFor(event.player) // XiaoJiang
 }
 
 private fun Query<PlayerNearLocationEventEntry>.findInRange(

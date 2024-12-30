@@ -2,6 +2,7 @@ package com.typewritermc.engine.paper.entry.dialogue
 
 import com.typewritermc.core.entries.Ref
 import com.typewritermc.core.entries.priority
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.TriggerableEntry
 import com.typewritermc.engine.paper.entry.entries.DialogueEntry
 import com.typewritermc.engine.paper.entry.entries.EmptyCinematicAction.setup
@@ -15,6 +16,7 @@ import com.typewritermc.engine.paper.events.AsyncDialogueSwitchEvent
 import com.typewritermc.engine.paper.facts.FactDatabase
 import com.typewritermc.engine.paper.interaction.*
 import com.typewritermc.engine.paper.utils.ThreadType.DISPATCHERS_ASYNC
+import com.typewritermc.engine.paper.utils.callEvent // XiaoJiang
 import com.typewritermc.engine.paper.utils.playSound
 import org.bukkit.entity.Player
 import org.koin.core.component.KoinComponent
@@ -134,5 +136,5 @@ val Player.speakersInDialogue: Set<Ref<SpeakerEntry>>
 
 fun Player.playSpeakerSound(speaker: SpeakerEntry?) {
     val sound = speaker?.sound ?: return
-    playSound(sound)
+    TypewriterPaperPlugin.adventure().player(this).playSound(sound) // XiaoJiang
 }

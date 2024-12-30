@@ -6,6 +6,7 @@ import com.typewritermc.core.entries.Ref
 import com.typewritermc.core.extension.annotations.Messenger
 import com.typewritermc.core.utils.around
 import com.typewritermc.core.utils.loopingDistance
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.Modifier
 import com.typewritermc.engine.paper.entry.TriggerableEntry
 import com.typewritermc.engine.paper.entry.dialogue.*
@@ -170,7 +171,7 @@ class JavaOptionDialogueDialogueMessenger(player: Player, entry: OptionDialogueE
         )
 
         val component = player.chatHistory.composeDarkMessage(message)
-        player.sendMessage(component)
+        TypewriterPaperPlugin.adventure().player(player).sendMessage(component) // XiaoJiang
     }
 
     private fun formatOptions(rawText: String): Component {

@@ -7,6 +7,7 @@ import com.typewritermc.engine.paper.entry.Criteria
 import com.typewritermc.core.entries.Ref
 import com.typewritermc.core.entries.emptyRef
 import com.typewritermc.core.extension.annotations.Icon
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.entries.CinematicAction
 import com.typewritermc.engine.paper.entry.entries.CinematicEntry
 import com.typewritermc.engine.paper.entry.entries.PrimaryCinematicEntry
@@ -42,7 +43,7 @@ class ActionBarDialogueCinematicEntry(
             speaker.get(),
             segments,
             actionBarPercentage,
-            reset = { sendActionBar(Component.empty()) },
+            reset = { TypewriterPaperPlugin.adventure().player(player).sendActionBar(Component.empty()) }, // XiaoJiang
             display = ::displayActionBar,
         )
     }
@@ -69,7 +70,7 @@ class RandomActionBarDialogueCinematicEntry(
             speaker.get(),
             segments.toDisplaySegments(),
             actionBarPercentage,
-            reset = { sendActionBar(Component.empty()) },
+            reset = { TypewriterPaperPlugin.adventure().player(player).sendActionBar(Component.empty()) }, // XiaoJiang
             display = ::displayActionBar,
         )
     }
@@ -102,5 +103,5 @@ private fun displayActionBar(player: Player, speakerName: String, text: String, 
     )
 
     player.acceptActionBarMessage(component)
-    player.sendActionBar(component)
+    TypewriterPaperPlugin.adventure().player(player).sendActionBar(component) // XiaoJiang
 }

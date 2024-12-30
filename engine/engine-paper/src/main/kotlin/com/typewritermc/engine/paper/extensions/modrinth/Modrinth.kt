@@ -2,6 +2,7 @@ package com.typewritermc.engine.paper.extensions.modrinth
 
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.plugin
 import com.typewritermc.engine.paper.utils.ThreadType.SYNC
 import com.typewritermc.engine.paper.utils.asMini
@@ -54,7 +55,7 @@ object Modrinth {
 
         val latestVersion = findLatestVersion(versions) ?: return
 
-        if (latestVersion.versionNumber.v <= plugin.pluginMeta.version.v) return
+        if (latestVersion.versionNumber.v <= plugin.description.version.v) return // XiaoJiang
 
         newVersion = latestVersion
 
@@ -62,7 +63,7 @@ object Modrinth {
             """|
             |-----------------{ Typewriter Update }-----------------
             |    A new version of Typewriter is available!
-            |    Current version: ${plugin.pluginMeta.version}
+            |    Current version: ${plugin.description.version}
             |    New version:     ${latestVersion.versionNumber}
             |    Download it at:  ${latestVersion.url}
             |------------------------------------------------------
@@ -73,7 +74,7 @@ object Modrinth {
     }
 
     private fun findLatestVersion(versions: List<ModrinthVersion>): ModrinthVersion? {
-        val currentIsDevelopment = plugin.pluginMeta.version.contains("dev")
+        val currentIsDevelopment = plugin.description.version.contains("dev") // XiaoJiang
 
         return versions
             .filter {
@@ -93,12 +94,12 @@ object Modrinth {
         val newVersion = newVersion ?: return
         notifiedPlayers.add(player.uniqueId)
 
-        player.sendMessage(
+        TypewriterPaperPlugin.adventure().player(player).sendMessage( // XiaoJiang
             """
             |<st><gray>             </st><gray>{ <dark_gray><bold>Typewriter Update</bold><gray> }<st>             </st>
             |
             |    A new version of Typewriter is available!
-            |    <red>Current version: <reset>${plugin.pluginMeta.version}<reset>
+            |    <red>Current version: <reset>${plugin.description.version}<reset>
             |    <green>New version:       <reset>${newVersion.versionNumber}<reset>
             |    <blue>Download it:       <reset><bold><click:open_url:${newVersion.url}><hover:show_text:Click to open>[Here]<reset>
             |    

@@ -6,6 +6,7 @@ import com.typewritermc.core.extension.annotations.Segments
 import com.typewritermc.engine.paper.entry.Criteria
 import com.typewritermc.core.entries.Ref
 import com.typewritermc.core.entries.emptyRef
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.entries.CinematicAction
 import com.typewritermc.engine.paper.entry.entries.CinematicEntry
 import com.typewritermc.engine.paper.entry.entries.PrimaryCinematicEntry
@@ -124,10 +125,10 @@ private fun displaySpokenDialogue(player: Player, speakerName: String, text: Str
     // Bedrock clients don't like chat animations, but they can have multiline actionbars.
     if (player.isFloodgate) {
         player.acceptActionBarMessage(component)
-        player.sendActionBar(component)
+        TypewriterPaperPlugin.adventure().player(player).sendActionBar(component) // XiaoJiang
         return
     }
 
     val componentWithDarkMessages = player.chatHistory.composeDarkMessage(component)
-    player.sendMessage(componentWithDarkMessages)
+    TypewriterPaperPlugin.adventure().player(player).sendMessage(componentWithDarkMessages) // XiaoJiang
 }

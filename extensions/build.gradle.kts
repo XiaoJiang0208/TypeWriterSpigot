@@ -45,6 +45,11 @@ subprojects {
         relocate("dev.jorel.commandapi", "com.typewritermc.engine.paper.extensions.commandapi") {
             include("dev.jorel.commandapi.**")
         }
+        relocate("net.kyori.adventure", "com.typewritermc.engine.paper.relocated.adventure") {
+            include("net.kyori.adventure.**")
+        }
+        relocate("com.github.retrooper.packetevents", "com.typewritermc.engine.paper.relocated.packetevents.api")
+        relocate("io.github.retrooper.packetevents", "com.typewritermc.engine.paper.relocated.packetevents.impl")
     }
 
     if (!project.name.startsWith("_")) {

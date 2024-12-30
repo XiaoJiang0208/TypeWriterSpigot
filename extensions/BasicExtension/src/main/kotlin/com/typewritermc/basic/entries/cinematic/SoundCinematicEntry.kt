@@ -4,6 +4,7 @@ import com.typewritermc.core.books.pages.Colors
 import com.typewritermc.engine.paper.entry.Criteria
 import com.typewritermc.core.extension.annotations.Entry
 import com.typewritermc.core.extension.annotations.Segments
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.cinematic.SimpleCinematicAction
 import com.typewritermc.engine.paper.entry.entries.*
 import com.typewritermc.engine.paper.utils.*
@@ -48,11 +49,11 @@ class SoundCinematicAction(
     override suspend fun startSegment(segment: SoundSegment) {
         super.startSegment(segment)
         previousSound = segment.sound.get(player)
-        player.playSound(previousSound!!)
+        TypewriterPaperPlugin.adventure().player(player).playSound(previousSound!!) // XiaoJiang
     }
 
     override suspend fun stopSegment(segment: SoundSegment) {
         super.stopSegment(segment)
-        previousSound?.let { player.stopSound(it) }
+        previousSound?.let { TypewriterPaperPlugin.adventure().player(player).stopSound(it) } // XiaoJiang
     }
 }

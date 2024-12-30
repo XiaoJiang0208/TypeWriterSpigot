@@ -14,6 +14,7 @@ import com.typewritermc.engine.paper.plugin
 import com.typewritermc.engine.paper.ui.ClientSynchronizer
 import com.typewritermc.engine.paper.utils.ThreadType.DISPATCHERS_ASYNC
 import com.typewritermc.engine.paper.utils.Timeout
+import com.typewritermc.engine.paper.utils.callEvent // XiaoJiang
 import com.typewritermc.engine.paper.utils.get
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -114,7 +115,7 @@ class StagingManagerImpl : StagingManager, KoinComponent {
         if (pages.containsKey(id)) return failure("Page with that id already exists")
 
         // Add the version of this page to track migrations
-        data.addProperty("version", plugin.pluginMeta.version)
+        data.addProperty("version", plugin.description.version) // XiaoJiang
 
         _pages?.put(id, data)
         autoSaver()

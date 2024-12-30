@@ -55,12 +55,18 @@ class FireworkActionEntry(
         super.execute(player)
 
         val item = ItemStack(Material.FIREWORK_ROCKET)
-            item.editMeta (FireworkMeta::class.java) { meta ->
-            this@FireworkActionEntry.effects.forEach { effect ->
-                meta.addEffect(effect.get(player).toBukkitEffect())
-            }
+        // XiaoJiang start
+        //item.editMeta (FireworkMeta::class.java) { meta ->
+        //    this@FireworkActionEntry.effects.forEach { effect ->
+        //        meta.addEffect(effect.get(player).toBukkitEffect())
+        //    }
+        //}
+        val emeta = item.itemMeta as FireworkMeta
+        this@FireworkActionEntry.effects.forEach { effect ->
+            emeta.addEffect(effect.get(player).toBukkitEffect())
         }
-
+        item.itemMeta = emeta
+        // XiaoJiang end
         val uuid = UUID.randomUUID()
         val entityId = EntityLib.getPlatform().entityIdProvider.provide(uuid, EntityTypes.FIREWORK_ROCKET)
         val meta = FireworkRocketMeta(entityId, Metadata(entityId)).apply {

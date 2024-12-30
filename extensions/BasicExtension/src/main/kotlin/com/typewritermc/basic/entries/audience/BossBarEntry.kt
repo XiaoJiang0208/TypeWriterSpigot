@@ -5,6 +5,7 @@ import com.typewritermc.core.extension.annotations.Entry
 import com.typewritermc.core.extension.annotations.Colored
 import com.typewritermc.core.extension.annotations.Help
 import com.typewritermc.core.extension.annotations.Placeholder
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.entries.*
 import com.typewritermc.engine.paper.extensions.placeholderapi.parsePlaceholders
 import com.typewritermc.engine.paper.utils.asMini
@@ -70,10 +71,10 @@ class BossBarDisplay(
             flags.toSet()
         )
         bars[player.uniqueId] = bar
-        player.showBossBar(bar)
+        TypewriterPaperPlugin.adventure().player(player).showBossBar(bar) // XiaoJiang
     }
 
     override fun onPlayerRemove(player: Player) {
-        bars.remove(player.uniqueId)?.let { player.hideBossBar(it) }
+        bars.remove(player.uniqueId)?.let { TypewriterPaperPlugin.adventure().player(player).hideBossBar(it) } // XiaoJiang
     }
 }

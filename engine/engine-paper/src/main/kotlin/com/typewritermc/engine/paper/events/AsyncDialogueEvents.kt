@@ -4,7 +4,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import org.bukkit.event.player.PlayerEvent
 
-class AsyncDialogueStartEvent(player: Player) : PlayerEvent(player, true) {
+class AsyncDialogueStartEvent(player: Player) : AsyncPlayerEvent(player, true) { // XiaoJiang
     override fun getHandlers(): HandlerList = HANDLER_LIST
 
     companion object {
@@ -16,7 +16,7 @@ class AsyncDialogueStartEvent(player: Player) : PlayerEvent(player, true) {
     }
 }
 
-class AsyncDialogueSwitchEvent(player: Player): PlayerEvent(player, true) {
+class AsyncDialogueSwitchEvent(player: Player): AsyncPlayerEvent(player, true) { // XiaoJiang
     override fun getHandlers(): HandlerList = HANDLER_LIST
 
     companion object {
@@ -28,7 +28,7 @@ class AsyncDialogueSwitchEvent(player: Player): PlayerEvent(player, true) {
     }
 }
 
-class AsyncDialogueEndEvent(player: Player): PlayerEvent(player, true) {
+class AsyncDialogueEndEvent(player: Player): AsyncPlayerEvent(player, true) { // XiaoJiang
     override fun getHandlers(): HandlerList = HANDLER_LIST
 
     companion object {

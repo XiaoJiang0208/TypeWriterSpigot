@@ -63,10 +63,16 @@ class PumpkinHatCinematicAction(
         super.startSegment(segment)
         val item = ItemStack(Material.CARVED_PUMPKIN)
             .apply {
-                editMeta { meta ->
+                // XiaoJiang start
+                //editMeta { meta ->
+                //    meta.name = " "
+                //    meta.unClickable()
+                //}
+                itemMeta?.let { meta ->
                     meta.name = " "
                     meta.unClickable()
                 }
+                // XiaoJiang end
             }
             .toPacketItem()
         interceptor = player.interceptPackets {

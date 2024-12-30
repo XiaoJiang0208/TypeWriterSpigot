@@ -1,5 +1,6 @@
 package com.typewritermc.engine.paper.utils
 
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.dialogue.confirmationKey
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
@@ -50,10 +51,10 @@ fun String.asMini() = mm.deserialize(this)
 
 fun String.asMiniWithResolvers(vararg resolvers: TagResolver) = mm.deserialize(this, *resolvers)
 
-fun CommandSender.sendMini(message: String) = sendMessage(message.asMini())
+fun CommandSender.sendMini(message: String) = TypewriterPaperPlugin.adventure().sender(this).sendMessage(message.asMini()) // XiaoJiang
 
 fun CommandSender.sendMiniWithResolvers(message: String, vararg resolvers: TagResolver) =
-    sendMessage(message.asMiniWithResolvers(*resolvers))
+    TypewriterPaperPlugin.adventure().sender(this).sendMessage(message.asMiniWithResolvers(*resolvers)) // XiaoJiang
 
 fun CommandSender.msg(message: String) = sendMini("<red><bold>Typewriter »<reset><white> $message")
 

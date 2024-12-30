@@ -5,8 +5,9 @@ import com.typewritermc.engine.paper.content.inLastContentMode
 import com.typewritermc.engine.paper.entry.entries.SystemTrigger
 import com.typewritermc.engine.paper.entry.triggerFor
 import com.typewritermc.engine.paper.plugin
-import com.typewritermc.engine.paper.utils.loreString
+import com.typewritermc.engine.paper.utils.asMini // XiaoJiang
 import com.typewritermc.engine.paper.utils.name
+import com.typewritermc.engine.paper.utils.toStringComponent // XiaoJiang
 import lirand.api.extensions.events.unregister
 import lirand.api.extensions.server.registerEvents
 import org.bukkit.Material
@@ -55,25 +56,40 @@ class ExitComponent(
         }
         val item = if (player.inLastContentMode) {
             ItemStack(Material.BARRIER).apply {
-                editMeta { meta ->
-                    meta.name = "<red><bold>Exit Editor"
-                    meta.loreString = """
-                    |
-                    |<line> <gray>Click to exit the editor.
-                    |$sneakingLine
-                """.trimMargin()
-                }
+                // XiaoJiang start
+                //editMeta { meta ->
+                //    meta.name = "<red><bold>Exit Editor"
+                //    meta.loreString = """
+                //    |
+                //    |<line> <gray>Click to exit the editor.
+                //    |$sneakingLine
+                //""".trimMargin()
+                //}
+                this.itemMeta?.name = "<red><bold>Exit Editor".asMini().toStringComponent()
+                this.itemMeta?.lore = listOf(
+                    "|",
+                    "|<line> <gray>Click to exit the editor.",
+                    "|$sneakingLine"
+                ).map { it.asMini().toStringComponent() }
+                //XiaoJiang end
             }
         } else {
             ItemStack(Material.END_CRYSTAL).apply {
-                editMeta { meta ->
-                    meta.name = "<yellow><bold>Previous Editor"
-                    meta.loreString = """
-                    |
-                    |<line> <gray>Click to go back to the previous editor.
-                    |$sneakingLine
-                """.trimMargin()
-                }
+                // XiaoJiang start
+                //editMeta { meta ->
+                //    meta.name = "<yellow><bold>Previous Editor"
+                //    meta.loreString = """
+                //    |
+                //    |<line> <gray>Click to go back to the previous editor.
+                //    |$sneakingLine
+                //""".trimMargin()
+                //}
+                this.itemMeta?.name = "<yellow><bold>Previous Editor".asMini().toStringComponent()
+                this.itemMeta?.lore = listOf(
+                    "<line> <gray>Click to go back to the previous editor.",
+                    sneakingLine
+                ).map { it.asMini().toStringComponent() }
+                // XiaoJiang end
             }
         }
 

@@ -28,7 +28,7 @@ fun org.bukkit.World.toWorld(): World = World(uid.toString())
 fun Position.toBukkitLocation(): org.bukkit.Location = org.bukkit.Location(world.toBukkitWorld(), x, y, z, yaw, pitch)
 fun Position.toPacketLocation(): Location = toBukkitLocation().toPacketLocation()
 
-fun org.bukkit.Location.toPosition(): Position = Position(World(world.uid.toString()), x, y, z, yaw, pitch)
+fun org.bukkit.Location.toPosition(): Position = Position(World(world?.uid.toString()), x, y, z, yaw, pitch) // XiaoJiang
 fun org.bukkit.Location.toPacketLocation(): Location = SpigotConversionUtil.fromBukkitLocation(this)
 fun org.bukkit.Location.toCoordinate(): Coordinate = Coordinate(x, y, z, yaw, pitch)
 

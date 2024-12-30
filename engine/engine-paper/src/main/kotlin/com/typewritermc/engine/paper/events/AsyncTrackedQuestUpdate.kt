@@ -12,7 +12,7 @@ class AsyncTrackedQuestUpdate(
     val from: Ref<QuestEntry>?,
     val to: Ref<QuestEntry>?,
 ) :
-    PlayerEvent(player, true) {
+    AsyncPlayerEvent(player, true) { // XiaoJiang
     override fun getHandlers(): HandlerList = HANDLER_LIST
 
     companion object {

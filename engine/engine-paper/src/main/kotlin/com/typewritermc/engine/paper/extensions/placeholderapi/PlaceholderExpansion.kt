@@ -28,7 +28,7 @@ object PlaceholderExpansion : PlaceholderExpansion(), KoinComponent, Reloadable 
 
     override fun getAuthor(): String = "gabber235"
 
-    override fun getVersion(): String = plugin.pluginMeta.version
+    override fun getVersion(): String = plugin.description.version // XiaoJiang
 
     override fun persist(): Boolean = true
 

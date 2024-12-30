@@ -5,6 +5,7 @@ import com.typewritermc.core.extension.annotations.Entry
 import com.typewritermc.engine.paper.entry.Criteria
 import com.typewritermc.engine.paper.entry.Modifier
 import com.typewritermc.core.entries.Ref
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.TriggerableEntry
 import com.typewritermc.engine.paper.entry.entries.ActionEntry
 import com.typewritermc.engine.paper.entry.entries.ConstVar
@@ -32,6 +33,6 @@ class PlaySoundActionEntry(
     override fun execute(player: Player) {
         super.execute(player)
 
-        player.playSound(sound.get(player))
+        TypewriterPaperPlugin.adventure().player(player).playSound(sound.get(player)) // XiaoJiang
     }
 }

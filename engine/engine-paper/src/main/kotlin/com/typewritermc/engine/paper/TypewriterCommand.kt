@@ -232,7 +232,7 @@ private fun CommandTree.connectCommand() {
 			""".trimMargin().asMini()
 
             val book = Book.book(bookTitle, bookAuthor, bookPage)
-            player.openBook(book)
+            TypewriterPaperPlugin.adventure().player(player).openBook(book) // XiaoJiang
         }
     }
 }

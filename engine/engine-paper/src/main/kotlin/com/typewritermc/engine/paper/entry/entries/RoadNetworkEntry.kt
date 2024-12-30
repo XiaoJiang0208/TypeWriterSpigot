@@ -12,6 +12,7 @@ import com.typewritermc.core.extension.annotations.Tags
 import com.typewritermc.core.utils.failure
 import com.typewritermc.core.utils.ok
 import com.typewritermc.core.utils.point.World
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.content.ContentContext
 import com.typewritermc.engine.paper.content.ContentMode
 import com.typewritermc.engine.paper.content.components.bossBar
@@ -269,7 +270,7 @@ class SelectRoadNodeCollectionContentMode(context: ContentContext, player: Playe
                 }
                 ref.fieldValue(fieldPath, newNodes)
                 nodes = newNodes
-                player.playSound("ui.button.click")
+                TypewriterPaperPlugin.adventure().player(player).playSound("ui.button.click") // XiaoJiang
             }
         }
 

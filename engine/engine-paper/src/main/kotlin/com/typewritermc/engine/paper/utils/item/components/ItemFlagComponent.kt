@@ -10,5 +10,7 @@ import org.bukkit.inventory.ItemStack
 class ItemFlagComponent(
     val flag: ItemFlag,
 ) : ItemComponent {
-    override fun apply(player: Player?, item: ItemStack) = item.addItemFlags(flag)
+    override fun apply(player: Player?, item: ItemStack) { // XiaoJiang
+        item.itemMeta?.addItemFlags(flag) // XiaoJiang
+    } // XiaoJiang
 }

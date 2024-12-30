@@ -2,6 +2,7 @@ package lirand.api.extensions.inventory
 
 import lirand.api.extensions.server.server
 import com.typewritermc.engine.paper.utils.asMini
+import com.typewritermc.engine.paper.utils.toStringComponent // XiaoJiang
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
@@ -14,7 +15,7 @@ fun Inventory(
 	title: String? = null
 ): Inventory {
 	return if (title != null)
-		server.createInventory(owner, type, title.asMini())
+		server.createInventory(owner, type, title.asMini().toStringComponent()) // XiaoJiang
 	else
 		server.createInventory(owner, type)
 }
@@ -25,7 +26,7 @@ fun Inventory(
 	title: String? = null
 ): Inventory {
 	return if (title != null)
-		server.createInventory(owner, size, title.asMini())
+		server.createInventory(owner, size, title.asMini().toStringComponent()) // XiaoJiang
 	else
 		server.createInventory(owner, size)
 }

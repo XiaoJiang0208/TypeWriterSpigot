@@ -15,6 +15,7 @@ import com.typewritermc.engine.paper.extensions.packetevents.sendPacketTo
 import com.typewritermc.engine.paper.logger
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.audience.ForwardingAudience
+import net.kyori.adventure.key.Key // XiaoJiang
 import net.kyori.adventure.sound.SoundStop
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
@@ -39,11 +40,11 @@ data class Sound(
     }
 
     val soundStop: SoundStop?
-        get() = soundId.namespacedKey?.let { SoundStop.named(it) }
+        get() = soundId.namespacedKey?.let { SoundStop.named(Key.key(it.namespace,it.key)) } // XiaoJiang
 
     fun play(audience: Audience) {
         val key = this.soundId.namespacedKey ?: return
-        val sound = AdventureSound.sound(key, track, volume, pitch)
+        val sound = AdventureSound.sound(Key.key(key.namespace,key.key), track, volume, pitch) // XiaoJiang
 
         when (soundSource) {
             is SelfSoundSource -> audience.playSound(sound)

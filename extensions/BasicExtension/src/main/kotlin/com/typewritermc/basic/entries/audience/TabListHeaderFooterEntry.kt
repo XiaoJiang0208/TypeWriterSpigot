@@ -7,6 +7,7 @@ import com.typewritermc.core.entries.priority
 import com.typewritermc.core.entries.ref
 import com.typewritermc.core.extension.annotations.Entry
 import com.typewritermc.core.extension.annotations.Help
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.*
 import com.typewritermc.engine.paper.entry.entries.*
 import com.typewritermc.engine.paper.extensions.placeholderapi.parsePlaceholders
@@ -87,7 +88,7 @@ private class PlayerTabListHeaderFooter(
         val footer = footerEntries.display(player)
 
         if (header == lastHeader && footer == lastFooter) return
-        player.sendPlayerListHeaderAndFooter(header.asMini(), footer.asMini())
+        TypewriterPaperPlugin.adventure().player(player).sendPlayerListHeaderAndFooter(header.asMini(), footer.asMini()) // XiaoJiang
         lastHeader = header
         lastFooter = footer
     }
@@ -103,7 +104,7 @@ private class PlayerTabListHeaderFooter(
     }
 
     private fun clear() {
-        player.sendPlayerListHeaderAndFooter(Component.empty(), Component.empty())
+        TypewriterPaperPlugin.adventure().player(player).sendPlayerListHeaderAndFooter(Component.empty(), Component.empty()) // XiaoJiang
         lastHeader = ""
         lastFooter = ""
     }

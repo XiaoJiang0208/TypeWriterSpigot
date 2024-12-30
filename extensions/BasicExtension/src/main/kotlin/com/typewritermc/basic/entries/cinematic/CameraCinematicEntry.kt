@@ -31,6 +31,7 @@ import lirand.api.extensions.events.unregister
 import me.tofaa.entitylib.meta.display.ItemDisplayMeta
 import me.tofaa.entitylib.meta.display.TextDisplayMeta
 import me.tofaa.entitylib.wrapper.WrapperEntity
+import org.bukkit.Bukkit // XiaoJiang
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Material
@@ -126,7 +127,7 @@ class CameraCinematicAction(
     private var listener: Listener? = null
 
     override suspend fun setup() {
-        action = if (player.isFloodgate) {
+        action = if (true/*player.isFloodgate*/) { // XiaoJiang
             TeleportCameraAction(player)
         } else {
             DisplayCameraAction(player)
@@ -325,7 +326,12 @@ private class DisplayCameraAction(
     override suspend fun startSegment(segment: CameraSegment) {
         setupPath(segment)
 
-        player.teleportAsync(path.first().position.toBukkitLocation()).await()
+        // XiaoJiang start
+        //player.teleportAsync(path.first().position.toBukkitLocation()).await()
+        Bukkit.getScheduler().runTask(plugin, Runnable {
+            player.teleport(path.first().position.toBukkitLocation())
+        })
+        // XiaoJiang end
 
         entity.spawn(path.first().position.toPacketLocation())
         entity.addViewer(player.uniqueId)
@@ -434,9 +440,14 @@ class SimulatedCameraCinematicAction(
                 displayType = ItemDisplayMeta.DisplayType.HEAD
                 item = SpigotConversionUtil.fromBukkitItemStack(ItemStack(Material.PLAYER_HEAD)
                     .apply {
-                        editMeta(SkullMeta::class.java) { meta ->
-                            meta.applySkinUrl("https://textures.minecraft.net/texture/427066e899358b1185460f867fc6dc434c7b4c82fbe70e1919ce74b8bacf80a1")
-                        }
+                        // XiaoJiang start
+                        //editMeta(SkullMeta::class.java) { meta ->
+                        //    meta.applySkinUrl("https://textures.minecraft.net/texture/427066e899358b1185460f867fc6dc434c7b4c82fbe70e1919ce74b8bacf80a1")
+                        //}
+                        val smeta = itemMeta as SkullMeta
+                        smeta.applySkinUrl("https://textures.minecraft.net/texture/427066e899358b1185460f867fc6dc434c7b4c82fbe70e1919ce74b8bacf80a1")
+                        itemMeta = smeta
+                        // XiaoJiang end
                     }
                 )
             }

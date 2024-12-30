@@ -6,6 +6,7 @@ import com.typewritermc.engine.paper.entry.Modifier
 import com.typewritermc.core.entries.Ref
 import com.typewritermc.engine.paper.entry.TriggerableEntry
 import com.typewritermc.core.extension.annotations.Entry
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.entries.ActionEntry
 import com.typewritermc.engine.paper.entry.entries.ConstVar
 import com.typewritermc.engine.paper.entry.entries.Var
@@ -43,7 +44,7 @@ class GiveItemActionEntry(
                 player.world.dropItemNaturally(player.location, it)
             }
             if (leftOver.isNotEmpty()) {
-                player.sendMessage(dropMessage.parsePlaceholders(player).asMini())
+                TypewriterPaperPlugin.adventure().player(player).sendMessage(dropMessage.parsePlaceholders(player).asMini()) // XiaoJiang
             }
         }
     }

@@ -14,6 +14,7 @@ import com.typewritermc.engine.paper.entry.AssetManager
 import com.typewritermc.engine.paper.entry.entries.*
 import com.typewritermc.engine.paper.entry.forceTriggerFor
 import com.typewritermc.engine.paper.entry.triggerFor
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.interaction.startBlockingActionBar
 import com.typewritermc.engine.paper.interaction.stopBlockingActionBar
 import com.typewritermc.engine.paper.plugin
@@ -22,6 +23,8 @@ import com.typewritermc.core.utils.failure
 import com.typewritermc.engine.paper.utils.loreString
 import com.typewritermc.engine.paper.utils.name
 import com.typewritermc.core.utils.ok
+import com.typewritermc.engine.paper.utils.asMini // XiaoJiang
+import com.typewritermc.engine.paper.utils.toStringComponent // XiaoJiang
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
@@ -58,25 +61,43 @@ class RecordingCinematicComponent<T : Any>(
     override fun items(player: Player): Map<Int, IntractableItem> {
         if (frameFetcher() > (context.endFrame ?: 0)) {
             val item = ItemStack(Material.BARRIER).apply {
-                editMeta { meta ->
-                    meta.name = "<red><b>Cannot Start Recording"
+                // XiaoJiang start
+                //editMeta { meta ->
+                //    meta.name = "<red><b>Cannot Start Recording"
+                //    meta.loreString = """
+                //    |<line> <gray>Recording cannot start
+                //    |<line> <gray>because the frame is out of range.
+                //    |
+                //    |<line> <gray>Make sure that the cinematic frame
+                //    |<line> <gray>is before the end frame of the segment.
+                //""".trimMargin()
+                //}
+                itemMeta?.let { meta ->
+                    meta.name = "<red><b>Cannot Start Recording".asMini().toStringComponent()
                     meta.loreString = """
-                    |<line> <gray>Recording cannot start 
-                    |<line> <gray>because the frame is out of range.
-                    |
-                    |<line> <gray>Make sure that the cinematic frame
-                    |<line> <gray>is before the end frame of the segment.
-                """.trimMargin()
+                        |<line> <gray>Recording cannot start 
+                        |<line> <gray>because the frame is out of range.
+                        |
+                        |<line> <gray>Make sure that the cinematic frame
+                        |<line> <gray>is before the end frame of the segment.
+                        """.trimMargin().asMini().toStringComponent()
                 }
+                // XiaoJiang end
             } onInteract {}
             return mapOf(slot to item)
         }
 
         val item = ItemStack(Material.BOOK).apply {
-            editMeta { meta ->
-                meta.name = "<green><b>Start Recording"
-                meta.loreString = "<line> <gray>Click to start recording the cinematic."
+            // XiaoJinag start
+            //editMeta { meta ->
+            //    meta.name = "<green><b>Start Recording"
+            //    meta.loreString = "<line> <gray>Click to start recording the cinematic."
+            //}
+            itemMeta?.let { meta ->
+                meta.name = "<green><b>Start Recording".asMini().toStringComponent()
+                meta.loreString = "<line> <gray>Click to start recording the cinematic.".asMini().toStringComponent()
             }
+            // XiaoJiang end
         } onInteract {
             ContentModeTrigger(context, modeCreator(context, player, frameFetcher(), klass)) triggerFor player
         }
@@ -226,7 +247,7 @@ abstract class RecordingCinematicContentMode<T : Any>(
 
         if (secondsLeft > 5) return
         if ((frames.first - frame) % 20 != 0) return
-        player.playSound(
+        TypewriterPaperPlugin.adventure().player(player).playSound( // XiaoJiang
             Sound.sound(
                 Key.key("block.note_block.bell"),
                 Sound.Source.MASTER,

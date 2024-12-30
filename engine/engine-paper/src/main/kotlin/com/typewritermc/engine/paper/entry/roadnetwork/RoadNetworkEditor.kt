@@ -69,11 +69,11 @@ class RoadNetworkEditor(
                 it.copy(edges = emptyList())
             }
             recalculateEdges.set(network.nodes.size)
-            val instancesSpaces = network.nodes.associate { it.location.world.uid to PFInstanceSpace(it.location.world) }
+            val instancesSpaces = network.nodes.associate { it.location.world!!.uid to PFInstanceSpace(it.location.world!!) } // XiaoJiang
             coroutineScope {
                 network.nodes.map {
                     launch {
-                        recalculateEdgesForNode(it, instancesSpaces[it.location.world.uid]!!)
+                        recalculateEdgesForNode(it, instancesSpaces[it.location.world?.uid]!!) // XiaoJiang
                         recalculateEdges.decrementAndGet()
                     }
                 }

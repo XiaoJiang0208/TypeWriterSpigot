@@ -2,6 +2,7 @@ package com.typewritermc.basic.entries.dialogue.messengers.actionbar
 
 import com.typewritermc.basic.entries.dialogue.ActionBarDialogueEntry
 import com.typewritermc.core.extension.annotations.Messenger
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.dialogue.*
 import com.typewritermc.engine.paper.entry.entries.DialogueEntry
 import com.typewritermc.engine.paper.extensions.placeholderapi.parsePlaceholders
@@ -89,7 +90,7 @@ class JavaActionBarDialogueDialogueMessenger(player: Player, entry: ActionBarDia
         )
 
         player.acceptActionBarMessage(component)
-        player.sendActionBar(component)
+        TypewriterPaperPlugin.adventure().player(player).sendActionBar(component) // XiaoJiang
     }
 
     override fun end() {
@@ -99,6 +100,6 @@ class JavaActionBarDialogueDialogueMessenger(player: Player, entry: ActionBarDia
     override fun dispose() {
         super.dispose()
         player.stopBlockingActionBar()
-        player.sendActionBar(Component.empty())
+        TypewriterPaperPlugin.adventure().player(player).sendActionBar(Component.empty()) // XiaoJiang
     }
 }

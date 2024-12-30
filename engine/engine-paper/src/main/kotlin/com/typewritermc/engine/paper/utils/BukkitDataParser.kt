@@ -4,6 +4,7 @@ import com.google.gson.*
 import com.typewritermc.core.utils.point.Coordinate
 import com.typewritermc.engine.paper.loader.serializers.CoordinateSerializer
 import com.typewritermc.engine.paper.logger
+import de.tr7zw.nbtapi.NBT // XiaoJiang
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -24,12 +25,13 @@ class ItemStackSerializer : JsonSerializer<ItemStack>, JsonDeserializer<ItemStac
     override fun deserialize(jsonElement: JsonElement, type: Type?, context: JsonDeserializationContext?): ItemStack {
         val data = jsonElement.asString
         if (data.isEmpty()) return ItemStack(Material.AIR, 0)
-        return ItemStack.deserializeBytes(Base64.getDecoder().decode(data))
+        return NBT.itemStackFromNBT(NBT.parseNBT(data))!!; // XiaoJiang
+        //return ItemStack.deserializeBytes(Base64.getDecoder().decode(data)) // XiaoJiang
     }
 
     override fun serialize(src: ItemStack, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
         if (src.type == Material.AIR) return JsonPrimitive("")
-        return JsonPrimitive(Base64.getEncoder().encodeToString(src.serializeAsBytes()))
+        return JsonPrimitive(NBT.itemStackToNBT(src).toString()) // XiaoJiang
     }
 }
 

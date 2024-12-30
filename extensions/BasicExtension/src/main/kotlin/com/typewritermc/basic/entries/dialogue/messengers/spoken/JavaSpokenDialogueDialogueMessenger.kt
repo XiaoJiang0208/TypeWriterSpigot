@@ -2,6 +2,7 @@ package com.typewritermc.basic.entries.dialogue.messengers.spoken
 
 import com.typewritermc.basic.entries.dialogue.SpokenDialogueEntry
 import com.typewritermc.core.extension.annotations.Messenger
+import com.typewritermc.engine.paper.TypewriterPaperPlugin // XiaoJiang
 import com.typewritermc.engine.paper.entry.dialogue.*
 import com.typewritermc.engine.paper.entry.entries.DialogueEntry
 import com.typewritermc.engine.paper.extensions.placeholderapi.parsePlaceholders
@@ -130,5 +131,5 @@ fun Player.sendSpokenDialogue(
     )
 
     val componentWithDarkMessages = chatHistory.composeDarkMessage(component)
-    sendMessage(componentWithDarkMessages)
+    TypewriterPaperPlugin.adventure().player(this).sendMessage(componentWithDarkMessages) // XiaoJiang
 }

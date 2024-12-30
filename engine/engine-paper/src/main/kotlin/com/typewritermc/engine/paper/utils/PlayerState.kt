@@ -97,7 +97,7 @@ data class EquipmentSlotStateProvider(
 ) : PlayerStateProvider {
 
     override fun store(player: Player): Any {
-        return player.inventory.getItem(slot)
+        return player.inventory.getItem(slot)!! // XiaoJiang
     }
 
     override fun restore(player: Player, value: Any) {

@@ -32,6 +32,7 @@ import com.typewritermc.engine.paper.ui.ClientSynchronizer
 import com.typewritermc.engine.paper.ui.CommunicationHandler
 import com.typewritermc.engine.paper.ui.PanelHost
 import com.typewritermc.engine.paper.ui.Writers
+import com.typewritermc.engine.paper.utils.callEvent // XiaoJiang
 import com.typewritermc.engine.paper.utils.createBukkitDataParser
 import com.typewritermc.engine.paper.utils.registerAll
 import com.typewritermc.engine.paper.utils.unregisterAll
@@ -39,8 +40,11 @@ import com.typewritermc.loader.DependencyChecker
 import com.typewritermc.loader.ExtensionLoader
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder // XiaoJiang
 import kotlinx.coroutines.delay
 import lirand.api.architecture.KotlinPlugin
+import net.kyori.adventure.platform.bukkit.BukkitAudiences // XiaoJiang
+import org.bukkit.Bukkit // XiaoJiang
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.KoinComponent
@@ -60,6 +64,16 @@ import java.util.logging.Logger
 import kotlin.time.Duration.Companion.seconds
 
 class TypewriterPaperPlugin : KotlinPlugin(), KoinComponent {
+    // XiaoJiang start
+    companion object {
+        private var adventure: BukkitAudiences? = null
+        fun adventure(): BukkitAudiences {
+            checkNotNull(adventure) { "Tried to access Adventure when the plugin was disabled!" }
+            return adventure!!
+        }
+    }
+    // XiaoJiang end
+
     override fun onLoad() {
         super.onLoad()
         val modules = module {
@@ -119,17 +133,29 @@ class TypewriterPaperPlugin : KotlinPlugin(), KoinComponent {
         }
 
         CommandAPI.onLoad(CommandAPIBukkitConfig(this).usePluginNamespace().skipReloadDatapacks(true))
+        // XiaoJiang start
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+        //On Bukkit, calling this here is essential, hence the name "load"
+        PacketEvents.getAPI().load();
+        // XiaoJiang end
     }
 
     override suspend fun onEnableAsync() {
-        CommandAPI.onEnable()
+        // XiaoJiang start
+        adventure = BukkitAudiences.create(this);
+        Bukkit.getScheduler().runTask(this, Runnable {
+            CommandAPI.onEnable()
+        })
+        // XiaoJiang end
         typeWriterCommand()
 
-        if (!server.pluginManager.isPluginEnabled("packetevents")) {
-            logger.warning("PacketEvents is not enabled, Typewriter will not work without it. Shutting down...")
-            server.pluginManager.disablePlugin(this)
-            return
-        }
+        // XiaoJiang start
+        //if (!server.pluginManager.isPluginEnabled("packetevents")) {
+        //    logger.warning("PacketEvents is not enabled, Typewriter will not work without it. Shutting down...")
+        //    server.pluginManager.disablePlugin(this)
+        //    return
+        //}
+        // XiaoJiang end
 
         PacketEvents.getAPI().settings.downsampleColors(false)
 
@@ -204,6 +230,12 @@ class TypewriterPaperPlugin : KotlinPlugin(), KoinComponent {
     val isFloodgateInstalled: Boolean by lazy { server.pluginManager.isPluginEnabled("Floodgate") }
 
     override suspend fun onDisableAsync() {
+        // XiaoJiang start
+        if(adventure != null) {
+            adventure!!.close();
+            adventure = null;
+        }
+        // XiaoJiang end
         if (CommandAPI.isLoaded()) {
             CommandAPI.onDisable()
         }

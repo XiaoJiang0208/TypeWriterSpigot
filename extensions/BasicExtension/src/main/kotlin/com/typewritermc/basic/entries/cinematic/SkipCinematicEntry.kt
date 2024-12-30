@@ -11,9 +11,11 @@ import com.typewritermc.engine.paper.entry.cinematic.setCinematicFrame
 import com.typewritermc.engine.paper.entry.entries.CinematicAction
 import com.typewritermc.engine.paper.entry.entries.CinematicEntry
 import com.typewritermc.engine.paper.entry.entries.Segment
+import com.typewritermc.engine.paper.events.AsyncPlayerEvent // XiaoJiang
 import com.typewritermc.engine.paper.interaction.InterceptionBundle
 import com.typewritermc.engine.paper.interaction.interceptPackets
 import com.typewritermc.engine.paper.plugin
+import com.typewritermc.engine.paper.utils.callEvent // XiaoJiang
 import lirand.api.extensions.events.SimpleListener
 import lirand.api.extensions.events.listen
 import lirand.api.extensions.events.unregister
@@ -107,7 +109,7 @@ class SkipCinematicAction(
 }
 
 class CinematicSkippableEvent(player: Player, val canSkip: Boolean, val confirmationKey: SkipConfirmationKey) :
-    PlayerEvent(player, !Bukkit.isPrimaryThread()) {
+    AsyncPlayerEvent(player, !Bukkit.isPrimaryThread()) { // XiaoJiang
     override fun getHandlers(): HandlerList = HANDLER_LIST
 
     companion object {

@@ -12,7 +12,7 @@ class AsyncFakeEntityInteract(
     val entityId: Int,
     val hand: InteractionHand,
     val action: InteractAction,
-) : PlayerEvent(player, true) {
+) : AsyncPlayerEvent(player, true) { // XiaoJiang
     override fun getHandlers(): HandlerList = HANDLER_LIST
 
     companion object {
@@ -30,7 +30,7 @@ class AsyncEntityDefinitionInteract(
     val definition: EntityDefinitionEntry,
     val hand: InteractionHand,
     val action: InteractAction,
-) : PlayerEvent(player, true) {
+) : AsyncPlayerEvent(player, true) { // XiaoJiang
     override fun getHandlers(): HandlerList = HANDLER_LIST
 
     companion object {

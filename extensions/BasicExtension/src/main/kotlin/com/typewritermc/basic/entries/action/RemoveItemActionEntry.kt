@@ -40,7 +40,7 @@ class RemoveItemActionEntry(
         super.execute(player)
 
         ThreadType.SYNC.launch {
-            player.inventory.removeItemAnySlot(item.get(player).build(player).clone())
+            player.inventory.removeItem(item.get(player).build(player).clone()) // XiaoJiang
         }
     }
 }

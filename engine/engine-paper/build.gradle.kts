@@ -1,10 +1,11 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import io.papermc.hangarpublishplugin.model.Platforms
+//import io.papermc.hangarpublishplugin.model.Platforms
 import java.io.ByteArrayOutputStream
 
 plugins {
     id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.1.2"
-    id("io.papermc.hangar-publish-plugin") version "0.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    //id("io.papermc.hangar-publish-plugin") version "0.1.2"
 }
 
 repositories {
@@ -13,10 +14,18 @@ repositories {
     maven("https://repo.opencollab.dev/maven-snapshots/")
     // PacketEvents, CommandAPI
     maven("https://repo.codemc.io/repository/maven-releases/")
+    maven("https://repo.codemc.io/repository/maven-public/") // XiaoJiang
     // PlaceholderAPI
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    // SpigotMC
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") {
+        name = "spigotmc-repo"
+    }
     // PaperMC
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://oss.sonatype.org/content/groups/public/") {
+        name = "sonatype"
+    }
     // EntityLib
     maven("https://maven.evokegames.gg/snapshots")
 }
@@ -32,7 +41,13 @@ dependencies {
     for (dependency in centralDependencies) {
         compileOnlyApi(dependency)
     }
-    compileOnlyApi("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    // XiaoJiang start
+    //compileOnlyApi("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnlyApi("org.spigotmc:spigot-api:1.21.3-R0.1-SNAPSHOT")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("de.tr7zw:item-nbt-api-plugin:2.14.1")
+    implementation ("com.extollit.gaming:hydrazine-path-engine:1.8.1")
+    // XiaoJiang end
 
     api(project(":engine-core"))
     api(project(":engine-loader"))
@@ -48,27 +63,41 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm:2.3.12")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.3")
     implementation("org.bstats:bstats-bukkit:3.1.0")
-    implementation("com.extollit.gaming:hydrazine-path-engine:1.8.1")
+    implementation("org.eclipse.jetty:jetty-server:11.0.14")
+    implementation("org.eclipse.jetty:jetty-servlet:11.0.14")
 
     val adventureVersion = "4.17.0"
-    compileOnlyApi("net.kyori:adventure-api:$adventureVersion")
-    compileOnlyApi("net.kyori:adventure-text-minimessage:$adventureVersion")
-    compileOnlyApi("net.kyori:adventure-text-serializer-plain:$adventureVersion")
-    compileOnlyApi("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
-    compileOnlyApi("net.kyori:adventure-text-serializer-gson:$adventureVersion")
+    api("net.kyori:adventure-api:$adventureVersion")
+    api("net.kyori:adventure-text-minimessage:$adventureVersion")
+    api("net.kyori:adventure-text-serializer-plain:$adventureVersion")
+    api("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
+    api("net.kyori:adventure-text-serializer-gson:$adventureVersion")
+    api("net.kyori:adventure-platform-bukkit:4.3.4")
 
-    compileOnlyApi("com.github.retrooper:packetevents-api:2.6.0-SNAPSHOT")
-    compileOnlyApi("com.github.retrooper:packetevents-spigot:2.6.0-SNAPSHOT")
+    api("com.github.retrooper:packetevents-api:2.7.0-SNAPSHOT")
+    api("com.github.retrooper:packetevents-spigot:2.7.0-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnlyApi("org.geysermc.floodgate:api:2.2.0-SNAPSHOT")
 
-    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.3.1")
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.18.0")
 }
 
 tasks.withType<ShadowJar> {
     relocate("org.bstats", "com.typewritermc.engine.paper.extensions.bstats")
     relocate("dev.jorel.commandapi", "com.typewritermc.engine.paper.extensions.commandapi") {
         include("dev.jorel.commandapi.**")
+    }
+    relocate("net.kyori.adventure", "com.typewritermc.engine.paper.relocated.adventure") {
+        include("net.kyori.adventure.**")
+    }
+    relocate("io.ktor.server", "com.typewritermc.engine.paper.relocated.server") {
+        include("io.ktor.server.**")
+    }
+    relocate("com.github.retrooper.packetevents", "com.typewritermc.engine.paper.relocated.packetevents.api") {
+        include("com.github.retrooper.packetevents.**")
+    }
+    relocate("io.github.retrooper.packetevents", "com.typewritermc.engine.paper.relocated.packetevents.impl") {
+        include("io.github.retrooper.packetevents.**")
     }
     minimize {
         exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
@@ -140,37 +169,37 @@ fun latestCommitMessage(): String {
     return executeGitCommand("log", "-1", "--pretty=%B")
 }
 
-hangarPublish {
-    publications.register("plugin") {
-        version.set(project.version.toString())
-        if (project.version.toString().contains("beta")) {
-            channel.set("Beta")
-        } else {
-            channel.set("Release")
-        }
-
-        id.set("Typewriter")
-        changelog.set(latestCommitMessage())
-        apiKey.set(System.getenv("HANGAR_API_TOKEN"))
-
-        platforms {
-            register(Platforms.PAPER) {
-                url.set("https://modrinth.com/plugin/typewriter/version/${project.version}")
-
-                val versions: List<String> = (property("paperVersion") as String)
-                    .split(",")
-                    .map { it.trim() }
-                platformVersions.set(versions)
-
-                dependencies {
-                    url("PacketEvents", "https://modrinth.com/plugin/packetevents/versions?l=paper&l=purpur") {
-                        required.set(true)
-                    }
-                }
-            }
-        }
-    }
-}
+//hangarPublish {
+//    publications.register("plugin") {
+//        version.set(project.version.toString())
+//        if (project.version.toString().contains("beta")) {
+//            channel.set("Beta")
+//        } else {
+//            channel.set("Release")
+//        }
+//
+//        id.set("Typewriter")
+//        changelog.set(latestCommitMessage())
+//        apiKey.set(System.getenv("HANGAR_API_TOKEN"))
+//
+//        platforms {
+//            register(Platforms.PAPER) {
+//                url.set("https://modrinth.com/plugin/typewriter/version/${project.version}")
+//
+//                val versions: List<String> = (property("paperVersion") as String)
+//                    .split(",")
+//                    .map { it.trim() }
+//                platformVersions.set(versions)
+//
+//                dependencies {
+//                    url("PacketEvents", "https://modrinth.com/plugin/packetevents/versions?l=paper&l=purpur") {
+//                        required.set(true)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 bukkitPluginYaml {
     name = "Typewriter"
@@ -180,8 +209,8 @@ bukkitPluginYaml {
     version = project.version.toString()
 
     main = "com.typewritermc.engine.paper.TypewriterPaperPlugin"
-    apiVersion = "1.21"
-    depend = listOf("packetevents")
-    softDepend = listOf("PlaceholderAPI", "floodgate")
+    apiVersion = "1.20"
+    //depend = listOf("packetevents")
+    softDepend = listOf("PlaceholderAPI","ProtocolSupport","ViaVersion","ViaBackwards","ViaRewind","Geyser-Spigot", "floodgate")
     libraries = centralDependencies
 }
